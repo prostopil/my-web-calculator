@@ -1,0 +1,316 @@
+<html lang="ru">
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX'); // Replace with your Google Analytics ID
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор стероидного цикла</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+  <div class="theme-switcher">
+    <button onclick="toggleTheme()" class="icon-button">
+      <svg class="theme-icon" viewBox="0 0 24 24">
+        <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"/>
+      </svg>
+    </button>
+  </div>
+  <div class="design-switcher">
+    <button onclick="toggleDesign()" class="icon-button">
+      <svg class="design-icon" viewBox="0 0 24 24">
+        <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zm1-11h-2v3H8v2h3v3h2v-3h3v-2h-3V8z" fill="currentColor"/>
+      </svg>
+    </button>
+  </div>
+  <div class="date-switcher">
+    <label for="startDate">Дата начала:</label>
+    <input type="date" id="startDate" required>
+  </div>
+  
+  <button class="export-button analytics" onclick="exportAnalytics()">
+    <svg class="export-icon" viewBox="0 0 24 24" width="24" height="24">
+      <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-2 16c-2.05 0-3.81-1.24-4.58-3h1.71c.63.9 1.68 1.5 2.87 1.5 1.93 0 3.5-1.57 3.5-3.5S13.93 9.5 12 9.5c-1.35 0-2.52.78-3.1 1.9l1.6 1.6h-4V9l1.3 1.3C8.69 8.92 10.23 8 12 8c2.76 0 5 2.24 5 5s-2.24 5-5 5z" fill="currentColor"/>
+    </svg>
+    Выгрузить аналитику
+  </button>
+
+  <div class="container">
+    <h1>Калькулятор стероидного цикла</h1>
+    
+    <div class="calculator">
+      <div class="compound-selector">
+        <div class="form-group">
+          <label for="compound">Выберите препарат:</label>
+          <select id="compound" onchange="updateEsters(); updateCompoundInfo()">
+            <optgroup label="Основные стероиды">
+              <option value="testosterone">Тестостерон</option>
+              <option value="nandrolone">Нандролон</option>
+              <option value="trenbolone">Тренболон</option>
+              <option value="boldenone">Болденон</option>
+              <option value="masteron">Мастерон</option>
+              <option value="stanozolol">Станозолол</option>
+              <option value="oxymetholone">Анаполон</option>
+            </optgroup>
+            <optgroup label="Препараты поддержки">
+              <option value="clomiphene">Кломифен</option>
+              <option value="anastrozole">Анастрозол</option>
+              <option value="hcg">Гонадотропин</option>
+              <option value="cabergoline">Каберголин</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="ester">Выберите эфир:</label>
+          <select id="ester" onchange="updateCompoundInfo()"></select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" id="concentration-group">
+          <label for="concentration">Концентрация:</label>
+          <input type="number" id="concentration" value="100">
+        </div>
+
+        <div class="form-group">
+          <label for="dosage">Дозировка:</label>
+          <input type="number" id="dosage" value="100">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="frequency-days">Частота приема:</label>
+          <select id="frequency-days">
+            <option value="1">Каждый день</option>
+            <option value="2">Через день</option>
+            <option value="3">Раз в 3 дня</option>
+            <option value="4">Раз в 4 дня</option>
+            <option value="5">Раз в 5 дней</option>
+            <option value="6">Раз в 6 дней</option>
+            <option value="7">Раз в неделю</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="duration">Длительность (недель):</label>
+          <input type="number" id="duration" min="1" value="10">
+        </div>
+      </div>
+
+      <button onclick="addCompound()" id="addButton">Добавить препарат</button>
+      <button onclick="updateCompound()" id="updateButton" style="display: none;">Обновить препарат</button>
+      <button onclick="cancelEdit()" id="cancelButton" style="display: none;">Отменить</button>
+      <button onclick="saveCycleAs()" class="save-cycle-button">Сохранить курс</button>
+    </div>
+
+    <div class="display-period-container">
+      <div class="form-group">
+        <label for="displayPeriod">Период отображения графика:</label>
+        <select id="displayPeriod">
+          <option value="30">30 дней</option>
+          <option value="45">45 дней</option>
+          <option value="60">60 дней</option>
+          <option value="90">90 дней</option>
+          <option value="120">120 дней</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab-buttons">
+        <button class="tab-button active" onclick="switchTab('compounds')">Активные препараты</button>
+        <button class="tab-button" onclick="switchTab('graph')">График</button>
+        <button class="tab-button" onclick="switchTab('calendar')">Календарь</button>
+        <button class="tab-button" onclick="switchTab('dashboard')">Дашборд</button>
+        <button class="tab-button" onclick="switchTab('tests')">Мед. Тесты</button>
+
+      </div>
+
+      <div id="compounds-tab" class="tab-content active">
+        <div class="active-compounds">
+          <h3>Активные препараты</h3>
+          <div id="activeCompounds"></div>
+        </div>
+        
+        <div class="info-panel">
+          <h3>Информация о препарате</h3>
+          <div id="compound-info"></div>
+        </div>
+      </div>
+
+      <div id="graph-tab" class="tab-content">
+        <div class="display-period-container">
+          <div class="form-group">
+            <label for="displayPeriod">Период отображения графика:</label>
+            <select id="displayPeriod">
+              <option value="30">30 дней</option>
+              <option value="45">45 дней</option>
+              <option value="60">60 дней</option>
+              <option value="90">90 дней</option>
+              <option value="120">120 дней</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="steroidChart"></canvas>
+        </div>
+      </div>
+
+      <div id="calendar-tab" class="tab-content">
+        <div class="calendar" id="calendar"></div>
+      </div>
+        
+       <div id="dashboard-tab" class="tab-content">
+        </div>
+
+        <div id="tests-tab" class="tab-content">
+             <h3>Медицинские тесты</h3>
+             
+            <div class="form-group">
+                <label for="test-name">Наименование теста:</label>
+                <select id="test-name">
+                    <option value="ЛГ">ЛГ</option>
+                    <option value="Тестостерон общий">Тестостерон общий</option>
+                    <option value="Эстрадиол">Эстрадиол</option>
+                    <option value="ГСПГ">ГСПГ</option>
+                    <option value="Пролактин">Пролактин</option>
+                    <option value="Билирубин общий">Билирубин общий</option>
+                    <option value="АЛТ">АЛТ</option>
+                    <option value="АСТ">АСТ</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="test-result">Результат:</label>
+                <input type="number" id="test-result">
+            </div>
+
+            <div class="form-group">
+                <label for="test-date">Дата:</label>
+                <input type="date" id="test-date">
+            </div>
+
+            <button onclick="addTestResult()">Добавить результат</button>
+
+             <div class="chart-container">
+                 <canvas id="testChart"></canvas>
+            </div>
+             
+             <div class="active-compounds">
+              <h3>Результаты анализов</h3>
+              <div id="medical-test-results"></div>
+            </div>
+             
+            <div class="info-panel">
+              <h3>Рекомендации по дозировке Анастрозола</h3>
+                <div id="anastrozole-advice"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="add-compound-dialog" class="dialog">
+      <h3>Добавить препарат на <span id="selected-date"></span></h3>
+        
+        <div class="form-group">
+            <label for="compound-dialog">Препарат:</label>
+            <select id="compound-dialog" onchange="updateEsters()">
+              <optgroup label="Основные стероиды">
+                <option value="testosterone">Тестостерон</option>
+                <option value="nandrolone">Нандролон</option>
+                <option value="trenbolone">Тренболон</option>
+                <option value="boldenone">Болденон</option>
+                <option value="masteron">Мастерон</option>
+                <option value="stanozolol">Станозолол</option>
+                <option value="oxymetholone">Анаполон</option>
+              </optgroup>
+              <optgroup label="Препараты поддержки">
+                <option value="clomiphene">Кломифен</option>
+                <option value="anastrozole">Анастрозол</option>
+                <option value="hcg">Гонадотропин</option>
+                <option value="cabergoline">Каберголин</option>
+              </optgroup>
+            </select>
+        </div>
+        
+      <div class="form-row">
+        <div class="form-group" id="concentration-group">
+          <label for="concentration-dialog">Концентрация:</label>
+          <input type="number" id="concentration-dialog" value="100">
+        </div>
+
+        <div class="form-group">
+          <label for="dosage-dialog">Дозировка:</label>
+          <input type="number" id="dosage-dialog" value="100">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="frequency-days-dialog">Частота:</label>
+          <select id="frequency-days-dialog">
+            <option value="1">Каждый день</option>
+            <option value="2">Через день</option>
+            <option value="3">Раз в 3 дня</option>
+            <option value="4">Раз в 4 дня</option>
+            <option value="5">Раз в 5 дней</option>
+            <option value="6">Раз в 6 дней</option>
+            <option value="7">Раз в неделю</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="ester-dialog">Эфир:</label>
+          <select id="ester-dialog"></select>
+        </div>
+      </div>
+
+      <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+
+        <h3>Препарат ПКТ</h3>
+        
+        <div class="form-group">
+            <label for="pct-compound-dialog">Препарат поддержки:</label>
+            <select id="pct-compound-dialog" onchange="updateEsters('pct')">
+                <option value="clomiphene">Кломифен</option>
+                <option value="anastrozole">Анастрозол</option>
+                <option value="hcg">Гонадотропин</option>
+                <option value="cabergoline">Каберголин</option>
+            </select>
+        </div>
+        
+       <div class="form-group">
+        <label for="pct-ester-dialog">Эфир:</label>
+        <select id="pct-ester-dialog"></select>
+      </div>
+
+       <div class="form-group">
+        <label for="pct-dosage-dialog">Дозировка:</label>
+        <input type="number" id="pct-dosage-dialog" value="50">
+      </div>
+      
+      <button onclick="addCompoundOnDate()">Добавить</button>
+      <button onclick="hideAddCompoundDialog()" class="secondary">Отмена</button>
+    </div>
+
+    <div class="dialog-backdrop" onclick="hideAddCompoundDialog()"></div>
+
+    <div class="saved-cycles">
+      <h3>Сохраненные курсы</h3>
+      <div id="savedCyclesList"></div>
+    </div>
+  <div class="pie-chart-container" style="display:none"></div>
+
+  <script src="steroid-data.js"></script>
+  <script src="calculator.js"></script>
+</body>
+</html>

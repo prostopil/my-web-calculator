@@ -1,0 +1,78 @@
+<hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+
+<h3>Препарат ПКТ</h3>
+    
+<div class="form-group">
+    <label for="pct-compound-dialog">Препарат ПКТ:</label>
+    <select id="pct-compound-dialog" onchange="updateEsters('pct')">
+        <option value="clomiphene">Кломифен</option>
+        <option value="anastrozole">Анастрозол</option>
+     </select>
+</div>
+    
+<div class="form-group">
+<label for="pct-ester-dialog">Эфир:</label>
+<select id="pct-ester-dialog"></select>
+</div>
+
+<div class="form-group">
+<label for="pct-dosage-dialog">Дозировка:</label>
+<input type="number" id="pct-dosage-dialog" value="50">
+</div>
+  
+<div class="form-group">
+    <label for="compound-dialog">Препарат:</label>
+    <select id="compound-dialog" onchange="updateEsters()">
+        <option value="testosterone">Тестостерон</option>
+        <option value="nandrolone">Нандролон</option>
+        <option value="trenbolone">Тренболон</option>
+        <option value="boldenone">Болденон</option>
+        <option value="masteron">Мастерон</option>
+        <option value="stanozolol">Станозолол</option>
+        <option value="oxymetholone">Анаполон</option>
+        <option value="hcg">Гонадотропин</option>
+    </select>
+</div>
+    
+<div class="form-group">
+<label for="ester-dialog">Эфир:</label>
+<select id="ester-dialog"></select>
+</div>
+    
+<div class="form-group">
+<label for="concentration-dialog">Концентрация:</label>
+<input type="number" id="concentration-dialog" value="100">
+</div>
+  
+<div class="form-group">
+<label for="dosage-dialog">Дозировка:</label>
+<input type="number" id="dosage-dialog" value="100">
+</div>
+  
+<div class="form-group">
+<label for="frequency-dialog">Количество инъекций в неделю:</label>
+<input type="number" id="frequency-dialog" min="1" max="7" value="2">
+</div>
+
+<button onclick="addCompoundOnDate()">Добавить</button>
+<button onclick="hideAddCompoundDialog()" class="secondary">Отмена</button>
+</div>
+
+<div class="dialog-backdrop" onclick="hideAddCompoundDialog()"></div>
+
+<div class="pct-section">
+<h3>Препараты ПКТ</h3>
+<div class="form-group">
+<label for="pct-compound">Выберите препарат ПКТ:</label>
+<select id="pct-compound" onchange="updatePCTInfo()">
+  <option value="clomiphene">Кломифен</option>
+  <option value="anastrozole">Анастрозол</option>
+</select>
+</div>
+<div id="pct-info" class="info-panel"></div>
+</div>
+
+<div class="saved-cycles">
+<h3>Сохраненные курсы</h3>
+<div id="savedCyclesList"></div>
+</div>
